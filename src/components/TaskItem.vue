@@ -13,7 +13,7 @@
     </div>
     <div class="actions">
       <div class="button-container">
-        <button>Delete task</button>
+        <button @click="removeTask">Delete task</button>
       </div>
     </div>
   </li>
@@ -22,6 +22,9 @@
 <script setup lang="ts">
 import {PropType} from "vue";
 import {ITask} from "@/types/types";
+import {useStore} from "vuex";
+
+const store = useStore();
 
 const props = defineProps({
   task: {
@@ -30,6 +33,9 @@ const props = defineProps({
   }
 })
 
+const removeTask = () => {
+  store.commit('taskStore/deleteTask', props.task.id);
+}
 </script>
 
 <style scoped lang="scss">

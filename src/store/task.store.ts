@@ -4,9 +4,9 @@ export default {
   namespaced: true,
   state: {
     tasks: [
-      {
-        id: 1,title: "title", description: "description"
-      }
+      // {
+      //   id: 1,title: "title", description: "description"
+      // }
     ] as Array<ITask>
   },
   getters: {
@@ -22,8 +22,8 @@ export default {
       state.tasks.push(task);
     },
     deleteTask(state: any, taskId: number) {
-      state.tasks.filter((task: ITask) => {
-        return task.id === taskId;
+      state.tasks = state.tasks.filter((task: ITask) => {
+        return task.id !== taskId;
       });
     },
     editTask(state: any, task: ITask) {
