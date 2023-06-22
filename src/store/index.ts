@@ -1,9 +1,7 @@
-import { createStore } from "vuex";
+import {createStore} from "vuex";
+import taskStore from "@/store/task.store";
+import modalStore from "@/store/modal.store";
 
 export default createStore({
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+  modules: {taskStore, modalStore},
 });
