@@ -5,15 +5,15 @@
         <div class="text-container">
           <span class="title">{{ task.title }}</span>
         </div>
-        <div class="button-container update-button-container">
-          <button>Update</button>
-        </div>
       </div>
       <div class="row subtitle-container">{{ task.description }}</div>
     </div>
     <div class="actions">
+      <div class="button-container update-button-container">
+        <button>Update</button>
+      </div>
       <div class="button-container">
-        <button @click="removeTask">Delete task</button>
+        <button @click="removeTask">Delete</button>
       </div>
     </div>
   </li>
@@ -59,5 +59,17 @@ button {
 
 .update-button-container {
   margin-left: 1.5rem;
+}
+
+.button-container {
+  margin-right: 1rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.actions {
+  display: flex;
 }
 </style>

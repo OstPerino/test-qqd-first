@@ -27,13 +27,12 @@ export default {
       });
     },
     editTask(state: any, task: ITask) {
-      const toUpdateTask = state.tasks.find((item: ITask) => {
-        return item.id === task.id;
-      });
-
-      // for (let key in task) {
-      //   toUpdateTask.key = task.key;
-      // }
+      state.tasks = state.tasks.map((item: ITask) => {
+        if (item.id === task.id) {
+          return item;
+        }
+        return { ...item, ...task };
+      })
     }
   }
 }
