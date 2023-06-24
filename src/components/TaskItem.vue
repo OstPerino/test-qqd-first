@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 const removeTask = () => {
-  store.commit('taskStore/deleteTask', props.task.id);
+  store.dispatch('taskStore/deleteTask', props.task.id);
 }
 </script>
 

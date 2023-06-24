@@ -3,11 +3,7 @@ import {ITask} from "@/types/types";
 export default {
   namespaced: true,
   state: {
-    tasks: [
-      // {
-      //   id: 1,title: "title", description: "description"
-      // }
-    ] as Array<ITask>
+    tasks: [] as Array<ITask>
   },
   getters: {
     getTask: (state: any) => (id: number) => {
@@ -32,7 +28,25 @@ export default {
           return item;
         }
         return { ...item, ...task };
-      })
+      });
+    }
+  },
+  actions: {
+    async fetchTasks(context: any) {
+      try {
+        const response = await requestTasks();
+        context.commit('setTasks', response.data);
+      } catch (e) {
+        return e.response;
+      }
+    },
+    async createTask(context: any, payload: ITask) {
+      try {
+        const response = await addTask(payload);
+        context.commit('addTask', response.data);
+      } catch (e) {
+        return e.response;
+      }
     }
   }
 }
