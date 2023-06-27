@@ -27,7 +27,7 @@
 import { useStore } from "vuex";
 import { reactive } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
-import db from "@/db/db";
+import {db} from "@/firebase/db";
 import { doc, setDoc } from "firebase/firestore";
 
 const store = useStore();

@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive } from "vue";
+import { PropType } from "vue";
 import { ITask } from "@/types/types";
 import { useStore } from "vuex";
 import TrashIcon from "@/components/icons/TrashIcon.vue";
@@ -41,14 +41,9 @@ const props = defineProps({
 
 const store = useStore();
 
-import db from "@/db/db";
-import { doc, deleteDoc } from "firebase/firestore";
+const deleteTask = () => {store.dispatch("deleteTask", props.task?.id)
+}
 
-const id = props.task.id;
-
-const deleteTask = () => {
-  deleteDoc(doc(db, "task", id));
-};
 </script>
 
 <style scoped>

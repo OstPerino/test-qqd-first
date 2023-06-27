@@ -27,19 +27,19 @@
 import { useStore } from "vuex";
 import { reactive } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
-import db from "@/db/db";
+import { db } from "@/firebase/db";
 import { collection, doc, setDoc } from "firebase/firestore";
 
 const store = useStore();
 
 const createTaskState = reactive({
-  title: "",
+  title: ""
 });
 
 const createTask = async () => {
   const task = collection(db, "task");
   await setDoc(doc(task), {
-    title: createTaskState.title,
+    title: createTaskState.title
   });
   store.commit("modalStore/closeModal");
 };
@@ -105,7 +105,7 @@ input {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s,
-    -webkit-box-shadow ease-in-out 0.15s;
+  -webkit-box-shadow ease-in-out 0.15s;
   -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   margin-bottom: 15px;
@@ -115,8 +115,8 @@ input:focus {
   border-color: #66afe9;
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.6);
+  0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.6);
+  0 0 8px rgba(102, 175, 233, 0.6);
 }
 </style>
