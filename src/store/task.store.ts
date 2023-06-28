@@ -3,13 +3,18 @@ import { db } from "@/firebase/db";
 import { collection, doc, deleteDoc, getDocs, updateDoc } from "firebase/firestore";
 
 export default {
+  namespaced: true,
   state: {
-    namespaced: true,
     tasks: [] as Array<ITask>
   },
   mutations: {
-    getTasks(state: any, payload: string) {
-      state.tasks.push(payload);
+    setTasks(state: any, payload: Array<any>) {
+      state.tasks = payload.map((task) => {
+        return {
+          id: task.id,
+          title: task.data().title
+        }
+      })
     },
     deleteTask(state: any, payload: string) {
       state.tasks.push(payload);
@@ -17,17 +22,19 @@ export default {
   },
   actions: {
     // KAKAYA TO HUITA
-    async getTasks({ commit }: { commit: Function }, state: any) {
+    async fetchTasks({ commit }: { commit: Function }, state: any) {
       const dataCollection = collection(db, "task");
       const results = await getDocs(dataCollection);
-      results.docs.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          title: doc.data().title
-        };
-        console.log(data);
-        commit("getTasks", data);
-      });
+      commit("setTasks", results.docs);
+      // console.log(results.docs);
+      // results.docs.forEach((doc) => {
+      //   const data = {
+      //     id: doc.id,
+      //     title: doc.data().title
+      //   };
+      //   console.log(data);
+      //   commit("getTasks", data);
+      // });
     },
     // RABOTAET
     async deleteTask({ commit }: { commit: Function }, tasks: any) {
