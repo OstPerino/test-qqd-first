@@ -10,7 +10,7 @@
     <div class="actions">
       <div class="button-container">
         <span
-          @click="store.commit('modalStore/showUpdateModal', '')"
+          @click="editTask"
           class="update"
         >
           <EditIcon />
@@ -35,14 +35,20 @@ import EditIcon from "@/components/icons/EditIcon.vue";
 const props = defineProps({
   task: {
     type: Object as PropType<ITask>,
-    required: true,
-  },
+    required: true
+  }
 });
 
 const store = useStore();
 
-const deleteTask = () => {store.dispatch("deleteTask", props.task?.id)
-}
+const deleteTask = () => {
+  store.dispatch("taskStore/deleteTask", props.task.id);
+};
+
+const editTask = () => {
+  store.commit('modalStore/showUpdateModal', '')
+  store.dispatch("taskStore/editTask", props.task.title);
+};
 
 </script>
 

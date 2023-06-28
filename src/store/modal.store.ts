@@ -2,6 +2,7 @@ export default {
   namespaced: true,
   state: {
     isShownModal: false,
+    isShownUpdateModal: false,
     modalType: "",
   },
   mutations: {
@@ -10,7 +11,7 @@ export default {
       state.modalType = payload;
     },
     showUpdateModal(state: any, payload: string) {
-      state.isShownModal = true;
+      state.isShownUpdateModal = true;
       state.modalType = payload;
     },
     closeModal(state: any) {

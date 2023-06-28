@@ -1,50 +1,52 @@
 import { ITask } from "@/types/types";
 import { db } from "@/firebase/db";
-import { collection, doc, deleteDoc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, doc, deleteDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 
 export default {
+  namespaced: true,
   state: {
-    namespaced: true,
     tasks: [] as Array<ITask>
   },
   mutations: {
-    getTasks(state: any, payload: string) {
-      state.tasks.push(payload);
+    setTasks(state: any, payload: Array<any>) {
+      state.tasks = payload.map((task) => {
+        return {
+          id: task.id,
+          title: task.data().title
+        };
+      });
     },
-    deleteTask(state: any, payload: string) {
-      state.tasks.push(payload);
+
+    deleteTask(state: any, payload: any) {
+      state.tasks = state.tasks.filter((tasks: any) => tasks.id !== payload);
+    },
+
+    editTask(state: any, payload: any) {
+      state.tasks.forEach((tasks: any) => {
+        if (tasks.id === payload) {
+          tasks.title = "hello";
+        }
+      });
     }
   },
   actions: {
-    // KAKAYA TO HUITA
-    async getTasks({ commit }: { commit: Function }, state: any) {
+    async fetchTasks({ commit }: { commit: Function }, state: any) {
       const dataCollection = collection(db, "task");
       const results = await getDocs(dataCollection);
-      results.docs.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          title: doc.data().title
-        };
-        console.log(data);
-        commit("getTasks", data);
-      });
+      commit("setTasks", results.docs);
     },
-    // RABOTAET
+
     async deleteTask({ commit }: { commit: Function }, tasks: any) {
       await deleteDoc(doc(db, "task", tasks));
       commit("deleteTask", tasks);
-    }
+    },
 
-    //EWE NE DELAL
-    // async updateTask({ commit, dispatch }, { tasks, routeId }) {
-    //   commit("deleteTask", tasks);
-    //   await dispatch("getTasks");
-    //   commit("updateTask", routeId);
-    // }
-  },
-  getters: {
-    getTasks(state: any) {
-      return state.tasks;
+    async editTask({ commit }: { commit: Function }, tasks: any) {
+      await updateDoc(doc(db, "task", tasks.id), {
+        title: tasks
+      });
+      console.log(tasks);
+      commit("editTask", tasks.id);
     }
   }
 };

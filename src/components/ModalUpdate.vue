@@ -32,16 +32,16 @@ import { doc, setDoc } from "firebase/firestore";
 
 const store = useStore();
 
-const updateTaskState = reactive({
-  title: "",
-});
+// const updateTaskState = reactive({
+//   title: "",
+// });
 
-const editTask = () => {
-  setDoc(doc(db, "task", doc().id), {
-    title: updateTaskState.title,
-  });
-  store.commit("modalStore/closeModal");
-};
+// const editTask = () => {
+//   setDoc(doc(db, "task", doc().id), {
+//     title: updateTaskState.title,
+//   });
+//   store.commit("modalStore/closeModal");
+// };
 </script>
 
 <style scoped lang="scss">
