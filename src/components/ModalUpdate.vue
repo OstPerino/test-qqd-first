@@ -1,40 +1,50 @@
 <template>
-  <div class="modal-container">
-    <div class="title">
-      <div class="text-container">
-        <span>Изменение задания</span>
+    <div class="modal-update">
+      <div class="title">
+        <div class="text-container">
+          <span>Изменение задания</span>
+        </div>
+        <div class="button-container">
+          <a @click="store.commit('modalStore/closeUpdateModal')">
+            <CloseIcon />
+          </a>
+        </div>
       </div>
-      <div class="button-container">
-        <a @click="store.commit('modalStore/closeModal')">
-          <CloseIcon />
-        </a>
+      <div class="actions">
+        <input
+          type="text"
+          placeholder="Название задачи"
+          v-model="updateTaskState.title"
+        />
+      </div>
+      <div class="submit-button">
+        <button @click="updateTask" class="add">Изменить задание</button>
       </div>
     </div>
-    <div class="actions">
-      <input
-        type="text"
-        placeholder="Название задачи"
-        v-model="updateTaskState.title"
-      />
-    </div>
-    <div class="submit-button">
-      <button @click="editTask" class="add">Изменить задание</button>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
-import {db} from "@/firebase/db";
-import { doc, setDoc } from "firebase/firestore";
 
 const store = useStore();
 
-// const updateTaskState = reactive({
-//   title: "",
-// });
+const updateTaskState = reactive({
+  title: "",
+});
+
+// const update = ref(false)
+//
+// function updateTask() {
+//   store.dispatch("taskStore/editTask", {
+//     title: updateTaskState.title,
+//   });
+//   store.commit("modalStore/closeUpdateModal");
+//   update.value = false;
+//   updateTaskState.title = "";
+// }
+
 
 // const editTask = () => {
 //   setDoc(doc(db, "task", doc().id), {
@@ -44,8 +54,8 @@ const store = useStore();
 // };
 </script>
 
-<style scoped lang="scss">
-.modal-container {
+<style scoped>
+.modal-update {
   width: 300px;
   background-color: var(--white);
   padding: 15px;

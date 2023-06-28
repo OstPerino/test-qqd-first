@@ -14,7 +14,7 @@
       <input
         type="text"
         placeholder="Название задачи"
-        v-model="createTaskState.title"
+        v-model="createTaskState"
       />
     </div>
     <div class="submit-button">
@@ -25,27 +25,23 @@
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { reactive } from "vue";
+import { ref } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
-import { db } from "@/firebase/db";
-import { collection, doc, setDoc } from "firebase/firestore";
 
 const store = useStore();
 
-const createTaskState = reactive({
-  title: ""
-});
+const createTaskState = ref("");
 
 const createTask = async () => {
-  const task = collection(db, "task");
-  await setDoc(doc(task), {
-    title: createTaskState.title
+  await store.dispatch("taskStore/createTask", {
+    title: createTaskState.value
   });
+  createTaskState.value = "";
   store.commit("modalStore/closeModal");
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .modal-container {
   width: 300px;
   background-color: var(--white);

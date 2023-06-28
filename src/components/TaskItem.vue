@@ -10,7 +10,7 @@
     <div class="actions">
       <div class="button-container">
         <span
-          @click="editTask"
+          @click="store.commit('modalStore/showUpdateModal', '')"
           class="update"
         >
           <EditIcon />
@@ -41,15 +41,9 @@ const props = defineProps({
 
 const store = useStore();
 
-const deleteTask = () => {
-  store.dispatch("taskStore/deleteTask", props.task.id);
+const deleteTask = async ()  => {
+ await store.dispatch("taskStore/deleteTask", props.task?.id);
 };
-
-const editTask = () => {
-  store.commit('modalStore/showUpdateModal', '')
-  store.dispatch("taskStore/editTask", props.task.title);
-};
-
 </script>
 
 <style scoped>

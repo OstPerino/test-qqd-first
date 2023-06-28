@@ -6,12 +6,10 @@
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import TaskItem from "@/components/TaskItem.vue";
 
 const store = useStore();
-
-const task = ref([]);
 
 const tasks = computed(() => store.state.taskStore.tasks);
 </script>
