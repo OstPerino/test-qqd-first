@@ -18,13 +18,14 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
 import TaskList from "@/components/TaskList.vue";
-import {computed, onMounted} from "vue";
 
 const store = useStore();
 
+import { onMounted } from "vue";
+
 onMounted(async () => {
-  await store.dispatch('taskStore/fetchTasks');
-})
+  await store.dispatch("taskStore/fetchTasks");
+});
 </script>
 
 <style scoped>

@@ -11,8 +11,6 @@ import TaskItem from "@/components/TaskItem.vue";
 
 const store = useStore();
 
-const task = ref([]);
-
 const tasks = computed(() => store.state.taskStore.tasks);
 </script>
 

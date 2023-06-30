@@ -17,5 +17,8 @@ export default {
     closeModal(state: any) {
       state.isShownModal = false;
     },
+    closeUpdateModal(state: any) {
+      state.isShownUpdateModal = false;
+    },
   },
 };

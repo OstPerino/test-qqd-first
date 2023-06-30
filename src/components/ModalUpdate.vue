@@ -1,11 +1,12 @@
 <template>
-  <div class="modal-container">
+  <LoaderComp v-if="isLoad" />
+  <div class="modal-update">
     <div class="title">
       <div class="text-container">
         <span>Изменение задания</span>
       </div>
       <div class="button-container">
-        <a @click="store.commit('modalStore/closeModal')">
+        <a @click="store.commit('modalStore/closeUpdateModal')">
           <CloseIcon />
         </a>
       </div>
@@ -18,34 +19,40 @@
       />
     </div>
     <div class="submit-button">
-      <button @click="editTask" class="add">Изменить задание</button>
+      <button @click="updateTask" class="add">Изменить задание</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
-import {db} from "@/firebase/db";
-import { doc, setDoc } from "firebase/firestore";
+import LoaderComp from "@/components/LoaderComp.vue";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase/db";
 
 const store = useStore();
 
-// const updateTaskState = reactive({
-//   title: "",
-// });
+const isLoad = ref(false);
 
-// const editTask = () => {
-//   setDoc(doc(db, "task", doc().id), {
-//     title: updateTaskState.title,
-//   });
-//   store.commit("modalStore/closeModal");
-// };
+const updateTaskState = reactive({
+  title: ""
+});
+
+const updateTask = async () => {
+  isLoad.value = true;
+  await store.dispatch("taskStore/editTask", {
+    title: updateTaskState.title
+  })
+  store.commit("modalStore/closeUpdateModal");
+  await store.dispatch("taskStore/fetchTasks");
+  isLoad.value = false;
+};
 </script>
 
-<style scoped lang="scss">
-.modal-container {
+<style scoped>
+.modal-update {
   width: 300px;
   background-color: var(--white);
   padding: 15px;
@@ -104,7 +111,7 @@ input {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out 0.15s,
-    -webkit-box-shadow ease-in-out 0.15s;
+  -webkit-box-shadow ease-in-out 0.15s;
   -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
   margin-bottom: 15px;
@@ -114,8 +121,8 @@ input:focus {
   border-color: #66afe9;
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.6);
+  0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-    0 0 8px rgba(102, 175, 233, 0.6);
+  0 0 8px rgba(102, 175, 233, 0.6);
 }
 </style>
