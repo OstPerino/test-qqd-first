@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import TaskItem from "@/components/TaskItem.vue";
 
 const store = useStore();

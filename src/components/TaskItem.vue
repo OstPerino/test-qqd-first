@@ -1,5 +1,6 @@
 <template>
   <li class="task-item">
+    <LoaderComp v-if="isLoad"/>
     <div class="info">
       <div class="row title-container">
         <div class="text-container">
@@ -26,11 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from "vue";
+import { PropType, ref } from "vue";
 import { ITask } from "@/types/types";
 import { useStore } from "vuex";
 import TrashIcon from "@/components/icons/TrashIcon.vue";
 import EditIcon from "@/components/icons/EditIcon.vue";
+import LoaderComp from "@/components/LoaderComp.vue";
 
 const props = defineProps({
   task: {
@@ -41,8 +43,12 @@ const props = defineProps({
 
 const store = useStore();
 
+const isLoad = ref(false)
+
 const deleteTask = async ()  => {
- await store.dispatch("taskStore/deleteTask", props.task?.id);
+  isLoad.value = true;
+  await store.dispatch("taskStore/deleteTask", props.task?.id);
+  isLoad.value = false;
 };
 </script>
 

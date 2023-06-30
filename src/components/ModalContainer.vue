@@ -1,5 +1,6 @@
 <template>
   <div class="modal-container">
+    <LoaderComp v-if="isLoad"/>
     <div class="title">
       <div class="text-container">
         <span>Создание задания</span>
@@ -27,17 +28,21 @@
 import { useStore } from "vuex";
 import { ref } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
+import LoaderComp from "@/components/LoaderComp.vue";
 
 const store = useStore();
 
 const createTaskState = ref("");
+const isLoad = ref(false);
 
 const createTask = async () => {
+  isLoad.value= true;
   await store.dispatch("taskStore/createTask", {
     title: createTaskState.value
   });
   createTaskState.value = "";
   store.commit("modalStore/closeModal");
+  isLoad.value = false;
 };
 </script>
 

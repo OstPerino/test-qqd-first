@@ -1,20 +1,19 @@
 import { ITask } from "@/types/types";
 import { db } from "@/firebase/db";
-import { collection, doc, deleteDoc, onSnapshot, updateDoc, setDoc, addDoc } from "firebase/firestore";
-import firebase from "firebase/compat";
+import { collection, doc, deleteDoc, onSnapshot, updateDoc, setDoc, addDoc, getDocs } from "firebase/firestore";
 
 export default {
   namespaced: true,
   state: {
-    tasks: [] as Array<ITask>
+    tasks: [] as Array<ITask>,
+    loadingStatus: false
   },
   mutations: {
     setTasks(state: any, payload: Array<any>) {
-      // state.tasks = state.tasks.filter((tasks: any) => tasks.id !== payload);
-      state.tasks.push(payload);
+      state.tasks = payload;
     },
 
-    createTask(state: any, payload: Array<any>) {
+    createTask(state: any, payload: ITask) {
       state.tasks.push(payload);
     },
 
@@ -23,6 +22,7 @@ export default {
     },
 
     // editTask(state: any, payload: any) {
+    //   // state.tasks.push(payload);
     //   state.tasks.forEach((tasks: any) => {
     //     if (tasks.id === payload) {
     //       tasks.title = "hello";
@@ -30,53 +30,45 @@ export default {
     //   });
     // },
 
-    cleanStore(state: any) {
-      state.tasks = [] as Array<ITask>
-    }
   },
   actions: {
     async fetchTasks({ commit }: { commit: Function }, state: any) {
-      let bTask = [];
-      await onSnapshot(collection(db, "task"), (getTask) => {
-        getTask.forEach((doc) => {
-          const tasks = {
-            id: doc.id,
-            title: doc.data().title
-          };
-          console.log(tasks);
-          bTask.push(tasks);
-          commit("setTasks", tasks);
-        });
+      const tasks: any = [];
+      const querySnapshot = await getDocs(collection(db, "task"));
+      querySnapshot.forEach((doc) => {
+        const task = {
+          id: doc.id,
+          title: doc.data().title
+        };
+        tasks.push(task)
       });
+      commit("setTasks", tasks)
     },
 
-    async createTask({ commit }: { commit: Function }, tasks: any) {
-      const docRef = await addDoc(collection(db, "task"), {
-        title: tasks.title
+    async createTask({ commit, dispatch }: { commit: Function, dispatch: Function }, task: any) {
+      await addDoc(collection(db, "task"), {
+        title: task.title
       });
-      const taskId = docRef.id
-      const updateDocId = doc(db, "task", taskId) ;
-      await updateDoc(updateDocId, {
-        id: taskId
-      });
-      commit("createTask", tasks);
+      await dispatch("fetchTasks");
     },
 
-    async deleteTask({ commit }: { commit: Function }, tasks: any) {
-      await deleteDoc(doc(db, "task", tasks));
-      commit("deleteTask", tasks);
+    async deleteTask({ commit, dispatch }: { commit: Function, dispatch: Function }, task: any) {
+      await deleteDoc(doc(db, "task", task));
+      await dispatch("fetchTasks");
     },
 
-    // async editTask({ commit }: { commit: Function }, tasks: any) {
-    //   await setDoc(doc(db, "task", tasks.id), {
-    //     title: tasks
-    //   });
-    //   console.log(tasks);
-    //   commit("editTask", tasks.id);
-    // },
-
-    cleanStore({ commit }: { commit: Function }) {
-      commit("cleanStore");
+    async editTask({ commit }: { commit: Function }, task: any) {
+      const ref = doc(collection(db, 'users'), query.uid)
+      const userDoc = await setDoc(ref)
+      // const docRef = doc(collection(db, "task", task.id), task.id);
+      // await setDoc(docRef, {
+      //   title: task.title
+      // })
+      // console.log(task);
+      // commit("editTask", task.id)
     }
+    // db.collection('books').doc(book.id).update({
+    //   title: book.title
+    // })
   },
 };
