@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper v-if="showModal"/>
-  <ModalUpdate v-if="showUpdateModal" />
+  <ModalUpdateWrapper v-if="showUpdateModal" />
   <router-view/>
 </template>
 
@@ -12,7 +12,7 @@
 import {computed} from "vue";
 import {useStore} from "vuex";
 import ModalWrapper from "@/components/ModalWrapper.vue";
-import ModalUpdate from "@/components/ModalUpdate.vue";
+import ModalUpdateWrapper from "@/components/ModalUpdateWrapper.vue";
 
 const store = useStore();
 

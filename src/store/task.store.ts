@@ -1,20 +1,21 @@
 import { ITask } from "@/types/types";
 import { db } from "@/firebase/db";
-import { collection, doc, deleteDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  collection, doc, deleteDoc, setDoc, addDoc, getDocs, updateDoc
+} from "firebase/firestore";
 
 export default {
   namespaced: true,
   state: {
-    tasks: [] as Array<ITask>
+    tasks: [] as Array<ITask>,
   },
   mutations: {
     setTasks(state: any, payload: Array<any>) {
-      state.tasks = payload.map((task) => {
-        return {
-          id: task.id,
-          title: task.data().title
-        };
-      });
+      state.tasks = payload;
+    },
+
+    createTask(state: any, payload: ITask) {
+      state.tasks.push(payload);
     },
 
     deleteTask(state: any, payload: any) {
@@ -22,31 +23,45 @@ export default {
     },
 
     editTask(state: any, payload: any) {
-      state.tasks.forEach((tasks: any) => {
-        if (tasks.id === payload) {
-          tasks.title = "hello";
-        }
-      });
+      state.tasks = payload;
     }
+
   },
   actions: {
     async fetchTasks({ commit }: { commit: Function }, state: any) {
-      const dataCollection = collection(db, "task");
-      const results = await getDocs(dataCollection);
-      commit("setTasks", results.docs);
-    },
-
-    async deleteTask({ commit }: { commit: Function }, tasks: any) {
-      await deleteDoc(doc(db, "task", tasks));
-      commit("deleteTask", tasks);
-    },
-
-    async editTask({ commit }: { commit: Function }, tasks: any) {
-      await updateDoc(doc(db, "task", tasks.id), {
-        title: tasks
+      const tasks: any = [];
+      const querySnapshot = await getDocs(collection(db, "task"));
+      querySnapshot.forEach((doc) => {
+        const task = {
+          id: doc.id,
+          title: doc.data().title
+        };
+        tasks.push(task);
       });
-      console.log(tasks);
-      commit("editTask", tasks.id);
+      commit("setTasks", tasks);
+    },
+
+    async createTask({ commit, dispatch }: { commit: Function, dispatch: Function }, task: any) {
+      await addDoc(collection(db, "task"), {
+        title: task.title
+      });
+      await dispatch("fetchTasks");
+    },
+
+    async deleteTask({ commit, dispatch }: { commit: Function, dispatch: Function }, task: any) {
+      await deleteDoc(doc(db, "task", task));
+      await dispatch("fetchTasks");
+    },
+
+    async editTask({ commit }: { commit: Function }, task: any) {
+      const querySnapshot = await getDocs(collection(db, "task"));
+      querySnapshot.forEach((docRef) => {
+        const updatedDoc = doc(db, "task", docRef.id);
+        updateDoc(updatedDoc, {
+          title: task.title
+        });
+      });
+      commit("editTask", task.id);
     }
   }
 };
