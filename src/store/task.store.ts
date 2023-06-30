@@ -11,10 +11,11 @@ export default {
   mutations: {
     setTasks(state: any, payload: Array<any>) {
       // state.tasks = state.tasks.filter((tasks: any) => tasks.id !== payload);
-      state.tasks.push(payload);
+      // state.tasks.push(payload);
+      state.tasks = payload;
     },
 
-    createTask(state: any, payload: Array<any>) {
+    createTask(state: any, payload: ITask) {
       state.tasks.push(payload);
     },
 
@@ -36,35 +37,29 @@ export default {
   },
   actions: {
     async fetchTasks({ commit }: { commit: Function }, state: any) {
-      let bTask = [];
+      const tasks: any = [];
       await onSnapshot(collection(db, "task"), (getTask) => {
         getTask.forEach((doc) => {
-          const tasks = {
+          const task = {
             id: doc.id,
             title: doc.data().title
           };
-          console.log(tasks);
-          bTask.push(tasks);
-          commit("setTasks", tasks);
+          tasks.push(task);
         });
+        commit("setTasks", tasks);
       });
     },
 
-    async createTask({ commit }: { commit: Function }, tasks: any) {
+    async createTask({ commit, dispatch }: { commit: Function, dispatch: Function }, task: any) {
       const docRef = await addDoc(collection(db, "task"), {
-        title: tasks.title
+        title: task.title
       });
-      const taskId = docRef.id
-      const updateDocId = doc(db, "task", taskId) ;
-      await updateDoc(updateDocId, {
-        id: taskId
-      });
-      commit("createTask", tasks);
+      await dispatch("fetchTasks");
     },
 
-    async deleteTask({ commit }: { commit: Function }, tasks: any) {
-      await deleteDoc(doc(db, "task", tasks));
-      commit("deleteTask", tasks);
+    async deleteTask({ commit, dispatch }: { commit: Function, dispatch: Function }, task: any) {
+      const result = await deleteDoc(doc(db, "task", task));
+      await dispatch("fetchTasks");
     },
 
     // async editTask({ commit }: { commit: Function }, tasks: any) {
@@ -74,9 +69,5 @@ export default {
     //   console.log(tasks);
     //   commit("editTask", tasks.id);
     // },
-
-    cleanStore({ commit }: { commit: Function }) {
-      commit("cleanStore");
-    }
   },
 };
