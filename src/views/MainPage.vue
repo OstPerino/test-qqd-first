@@ -1,10 +1,9 @@
 <template>
+  <div class="task-link">
+    <router-link to="tasks">Страница задач</router-link>
+  </div>
   <div class="main-page">
     <h1>Добро пожаловать на главную страницу</h1>
-  </div>
-
-  <div class="task-link">
-    <router-link to="tasks">Добавить задачу</router-link>
   </div>
 </template>
 
@@ -14,14 +13,14 @@
 .main-page {
   display: flex;
   justify-content: center;
-  align-items: center;
-  text-align: center;
+  margin-top: 15px;
 }
 
 .task-link {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
+  background: var(--grey);
 }
 
 .task-link a {

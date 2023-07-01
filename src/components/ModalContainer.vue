@@ -1,6 +1,6 @@
 <template>
   <div class="modal-container">
-    <LoaderComp v-if="isLoad"/>
+    <LoaderComp v-if="isLoad" />
     <div class="title">
       <div class="text-container">
         <span>Создание задания</span>
@@ -29,6 +29,8 @@ import { useStore } from "vuex";
 import { ref } from "vue";
 import CloseIcon from "@/components/icons/CloseIcon.vue";
 import LoaderComp from "@/components/LoaderComp.vue";
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
 
 const store = useStore();
 
@@ -36,13 +38,26 @@ const createTaskState = ref("");
 const isLoad = ref(false);
 
 const createTask = async () => {
-  isLoad.value= true;
-  await store.dispatch("taskStore/createTask", {
-    title: createTaskState.value
-  });
-  createTaskState.value = "";
-  store.commit("modalStore/closeModal");
-  isLoad.value = false;
+  if (createTaskState.value.length !== 0) {
+    isLoad.value = true;
+    await store.dispatch("taskStore/createTask", {
+      title: createTaskState.value
+    });
+    createTaskState.value = "";
+    store.commit("modalStore/closeModal");
+    isLoad.value = false;
+    createToast("Задача успешно добавлена", {
+      showIcon: true,
+      type: "success",
+      transition: "zoom"
+    })
+  } else {
+    createToast("Поле не должно быть пустым!", {
+      showIcon: true,
+      type: "danger",
+      transition: "zoom",
+    });
+  }
 };
 </script>
 

@@ -1,17 +1,9 @@
 <template>
-  <div class="tasks-page">
-    <h1>Список заданий</h1>
-  </div>
   <div class="main-page-link">
     <router-link to="main">Главная страница</router-link>
   </div>
   <div class="tasks-list">
     <TaskList />
-  </div>
-  <div class="button-container">
-    <button class="add" @click="store.commit('modalStore/showModal', '')">
-      Добавить задание
-    </button>
   </div>
 </template>
 
@@ -29,16 +21,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.tasks-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .main-page-link {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
+  background: var(--grey);
 }
 
 .main-page-link a {
@@ -54,20 +41,7 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.add {
-  background-color: var(--blue);
-}
-
-.add:hover {
-  background-color: #001b4d;
-  transition: var(--transition);
+  flex-direction: column;
+  margin-top: 30px;
 }
 </style>

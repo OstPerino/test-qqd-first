@@ -1,11 +1,14 @@
 <template>
-  <div class="modal-wrapper">
+  <div class="modal-wrapper"
+  @click.self="store.commit('modalStore/closeModal')"
+  >
     <ModalContainer />
   </div>
 </template>
 
 <script setup lang="ts">
 import ModalContainer from "@/components/ModalContainer.vue";
+import store from "@/store";
 </script>
 
 <style scoped>
